@@ -18,7 +18,18 @@ public class Ssml {
     // Parses SSML to a SSMLNode, throwing on invalid SSML
     public static SSMLNode parseSSML(String ssml) {
         // NOTE: Don't forget to run unescapeXMLChars on the SSMLText
-        throw new UnsupportedOperationException("Implement this function");
+        String unescapeStr = unescapeXMLChars(ssml);
+        System.out.println("ans:" + unescapeStr);
+
+        //return new SSMLElement(name, )
+
+        // throw new UnsupportedOperationException("Implement this function");
+
+        return null;
+    }
+
+    public static void main(String[] args) {
+        parseSSML("<speak></speak>");
     }
 
     // Recursively converts SSML node to string and unescapes XML chars
@@ -33,7 +44,9 @@ public class Ssml {
 
     public sealed interface SSMLNode permits SSMLElement, SSMLText {}
 
-    public record SSMLElement(String name, List<SSMLAttribute> attributes, List<SSMLNode> children) implements SSMLNode {}
+    public record SSMLElement(String name, List<SSMLAttribute> attributes, List<SSMLNode> children) implements SSMLNode {
+
+    }
 
     public record SSMLAttribute(String name, String value) {}
 
