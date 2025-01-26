@@ -1,6 +1,4 @@
-import com.tradedest.nwaycache.Cache;
-import com.tradedest.nwaycache.LruReplacementAlgorithm;
-import com.tradedest.nwaycache.NWaySetAssociativeCache;
+import com.tradedest.nwaycache.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,8 +23,8 @@ public class NWaySetAssociativeCacheTest {
         cache.put(16, "Good");
         cache.put(32, "Bad");
 
-        assertEquals("Good", cache.getCacheContents()[0][0].getData());
-        assertEquals("Bad", cache.getCacheContents()[0][1].getData());
+        assertEquals("Good", cache.getCacheContents()[0].get(0).getData());
+        assertEquals("Bad", cache.getCacheContents()[0].get(1).getData());
     }
 
     @Test

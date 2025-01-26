@@ -1,5 +1,5 @@
 package com.tradedest.nwaycache;
 
-public interface ReplacementAlgorithm<> {
+public interface ReplacementAlgorithm<K, V, M> {
 
 }
