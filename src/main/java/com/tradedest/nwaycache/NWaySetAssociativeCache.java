@@ -19,7 +19,43 @@ public class NWaySetAssociativeCache<K, V, M> implements Cache<K, V, M> {
 
     @Override
     public void put(K key, V value) {
+        CacheElement<K, V, M> evictionCandidate = null;
 
+        List<CacheElement<K, V, M>> targetSet = getSet(key);
+
+        for (CacheElement<K, V, M> element : targetSet) {
+            if (this.entrySize == targetSet.size()) {
+                evictionCandidate = chooseBetterEvictionCandidate(element, evictionCandidate);
+            }
+            if (element.getKey().equals(key)) {
+                element.setData(value);
+                this.replacementAlgorithm.onSet(element);
+                return;
+            }
+        }
+
+        if (this.entrySize > targetSet.size()) {
+            CacheElement<K, V, M> newElement = new CacheElement<>(key, value);
+            targetSet.add(newElement);
+            this.replacementAlgorithm.onSet(newElement);
+            return;
+        }
+
+        if (evictionCandidate != null) {
+            evictionCandidate.setKeyData(key, value);
+            this.replacementAlgorithm.onSet(evictionCandidate);
+        }
+    }
+
+    private CacheElement<K, V, M> chooseBetterEvictionCandidate(CacheElement<K, V, M> current, CacheElement<K, V, M> candidate) {
+        if (current == null) {
+            return candidate;
+        }
+        if (this.replacementAlgorithm.compare(current, candidate) > 0) {
+            return candidate;
+        } else {
+            return current;
+        }
     }
 
     @Override

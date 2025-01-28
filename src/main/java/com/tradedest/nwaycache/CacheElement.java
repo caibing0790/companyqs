@@ -6,12 +6,26 @@ public class CacheElement<K, V, M> {
     private K key;
     private V data;
 
+    public CacheElement(K key, V data) {
+        this.key = key;
+        this.data = data;
+    }
+
     public V getData() {
         return data;
     }
 
     public K getKey() {
         return key;
+    }
+
+    public void setData(V data) {
+        this.data = data;
+    }
+
+    public void setKeyData(K key, V data) {
+        this.key = key;
+        this.data = data;
     }
 
     @Override
