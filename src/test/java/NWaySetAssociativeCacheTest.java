@@ -38,11 +38,13 @@ public class NWaySetAssociativeCacheTest {
     }
 
     @Test
-    public void testLeastRecentlyUsedAlgorithmWorks() {
+    public void testLeastRecentlyUsedAlgorithmWorks() throws InterruptedException {
         Cache<Integer, String, Long> cache = new NWaySetAssociativeCache<>(8, 2, new LruReplacementAlgorithm<>());
 
         cache.put(16, "Good");
+        Thread.sleep(50);
         cache.put(32, "Bad");
+        Thread.sleep(50);
         cache.put(48, "Ugly");
 
         assertNull(cache.get(16));
@@ -51,12 +53,15 @@ public class NWaySetAssociativeCacheTest {
     }
 
     @Test
-    public void testMostRecentlyUsedAlgorithmWorks() {
+    public void testMostRecentlyUsedAlgorithmWorks() throws InterruptedException {
         Cache<Integer, String, Long> cache = new NWaySetAssociativeCache<>(8, 2, new MruReplacementAlgorithm<>());
 
         cache.put(16, "Good");
+        Thread.sleep(50);
         cache.put(32, "Bad");
+        Thread.sleep(50);
         cache.put(48, "Ugly");
+        System.out.println(cache.get(48));
 
         assertEquals("Good", cache.get(16));
         assertNull(cache.get(32));
@@ -64,13 +69,17 @@ public class NWaySetAssociativeCacheTest {
     }
 
     @Test
-    public void testOurCustomerImplementCacheThatChooseTheFirstOneToEvictWorks() {
+    public void testOurCustomerImplementCacheThatChooseTheFirstOneToEvictWorks() throws InterruptedException {
         Cache<Integer, String, Long> cache = new NWaySetAssociativeCache<>(8, 4, new LruReplacementAlgorithm<>());
 
         cache.put(16, "Good");
+        Thread.sleep(50);
         cache.put(32, "Bad");
+        Thread.sleep(50);
         cache.put(48, "Ugly");
+        Thread.sleep(50);
         cache.put(64, "Something");
+        Thread.sleep(50);
         cache.put(80, "Wrong");
 
         assertNull(cache.get(16));

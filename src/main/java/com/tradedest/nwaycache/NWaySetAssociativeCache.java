@@ -25,7 +25,7 @@ public class NWaySetAssociativeCache<K, V, M> implements Cache<K, V, M> {
 
         for (CacheElement<K, V, M> element : targetSet) {
             if (this.entrySize == targetSet.size()) {
-                evictionCandidate = chooseBetterEvictionCandidate(element, evictionCandidate);
+                evictionCandidate = chooseBetterEvictionCandidate(evictionCandidate, element);
             }
             if (element.getKey().equals(key)) {
                 element.setData(value);
@@ -66,6 +66,7 @@ public class NWaySetAssociativeCache<K, V, M> implements Cache<K, V, M> {
             if (ele.getKey().equals(key)) {
                 this.replacementAlgorithm.onGet(ele);
                 data = ele.getData();
+                break;
             }
         }
         return data;

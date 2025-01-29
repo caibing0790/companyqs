@@ -5,6 +5,7 @@ import java.util.Objects;
 public class CacheElement<K, V, M> {
     private K key;
     private V data;
+    private M metadata;
 
     public CacheElement(K key, V data) {
         this.key = key;
@@ -26,6 +27,14 @@ public class CacheElement<K, V, M> {
     public void setKeyData(K key, V data) {
         this.key = key;
         this.data = data;
+    }
+
+    public void setMetadata(M metadata) {
+        this.metadata = metadata;
+    }
+
+    public M getMetadata() {
+        return metadata;
     }
 
     @Override
