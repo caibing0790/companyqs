@@ -17,8 +17,15 @@ public class NWaySetAssociativeCache<K, V, M> implements Cache<K, V, M> {
         cacheContent = (List<CacheElement<K, V, M>>[]) Array.newInstance(List.class, this.setSize);
     }
 
+    /**
+     * 将键值对添加或更新到缓存中
+     * 如果键已存在，则更新其值；如果缓存已满，则根据替换算法选择并替换元素
+     *
+     * @param key 要添加或更新的键
+     * @param value 对应的值
+     */
     @Override
-    public void put(K key, V value) {
+    public synchronized void put(K key, V value) {
         CacheElement<K, V, M> evictionCandidate = null;
 
         List<CacheElement<K, V, M>> targetSet = getSet(key);
