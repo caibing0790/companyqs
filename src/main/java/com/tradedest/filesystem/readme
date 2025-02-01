@@ -1,0 +1,7 @@
+Mock file system.
+Level 1: Add file with file name and file size, then delete file by name.
+Level 2: Return largest n files starting with given prefix in descending order.
+Level 3: Add user which capacity limit, then user can add file but should not exceed the capacity limit.
+Also merge 2 users, for example to transfer all files from user2 to user1 and give all remaining capacity of user2 to user1.
+Level 4. Backup files by user and restore files by user. Each backup should overwrite the previous backup.
+Each restore should erase the current files of the user, but if the file name is used by another user, skip it.
