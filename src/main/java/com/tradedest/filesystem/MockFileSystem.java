@@ -5,10 +5,12 @@ import java.util.*;
 public class MockFileSystem {
     private final Map<String, Long> files;
     private final Map<String, User> users;
+    private final Map<String, Map<String, Long>> backups;
 
     public MockFileSystem() {
         this.files = new HashMap<>();
         this.users = new HashMap<>();
+        this.backups = new HashMap<>();
     }
 
     public void addFile(String fileName, long fileSize) {
@@ -21,6 +23,13 @@ public class MockFileSystem {
 
     public long getFileSize(String fileName) {
         return files.get(fileName);
+    }
+
+    public User getUser(String userName) {
+        if (!users.containsKey(userName)) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+        return users.get(userName);
     }
 
     public boolean containsFile(String fileName) {
@@ -68,23 +77,75 @@ public class MockFileSystem {
         }
     }
 
-    public void mergeUsers(String userName1, String userName2) {
+    public void mergeUsers(String mergeToUserName, String mergeFromUserName) {
+        validateUser(mergeToUserName);
+        validateUser(mergeFromUserName);
+        User mergeToUser = users.get(mergeToUserName);
+        User mergeFromUser = users.get(mergeFromUserName);
+        mergeToUser.addCapacity(mergeFromUser.getCapacity());
+        mergeToUser.addFiles(mergeFromUser.getFiles());
+        users.remove(mergeFromUserName);
+        mergeFromUser.deleteAllFiles();
+    }
 
+    private void validateUser(String userName) {
+        if (!users.containsKey(userName)) {
+            throw new IllegalArgumentException("User does not exist");
+        }
     }
 
     public long getCapacityLimitOfUser(String userName) {
-        return 0;
+        if (users.containsKey(userName)) {
+            return users.get(userName).getCapacity();
+        } else {
+            throw new IllegalArgumentException("User does not exist");
+        }
     }
 
     public boolean containsFileOfUser(String userName, String fileName) {
+        if (users.containsKey(userName)) {
+            return users.get(userName).getFiles().containsKey(fileName);
+        }
         return false;
     }
 
     public void backupUserFiles(String userName) {
-
+        this.backups.put(userName, new HashMap<>(users.get(userName).getFiles()));
     }
 
     public void restoreUserFiles(String userName) {
+        User user = users.get(userName);
+        if (!backups.containsKey(userName)) {
+            throw new IllegalArgumentException("No backup found for user");
+        }
+        Map<String, Long> userBackup = backups.get(userName);
+        long totalSizeOfBackup = 0;
+        for (Map.Entry<String, Long> entry : userBackup.entrySet()) {
+            String fileName = entry.getKey();
+            if (isOccupyByOtherUsers(fileName, userName)) {
+                continue;
+            }
+            totalSizeOfBackup += entry.getValue();
+        }
+        if (user.getCapacity() < totalSizeOfBackup) {
+            throw new IllegalArgumentException("Not enough capacity to restore backup");
+        }
+        user.deleteAllFiles();
+        for (Map.Entry<String, Long> entry : userBackup.entrySet()) {
+            String fileName = entry.getKey();
+            if (isOccupyByOtherUsers(fileName, userName)) {
+                continue;
+            }
+            user.addFile(entry.getKey(), entry.getValue());
+        }
+    }
 
+    private boolean isOccupyByOtherUsers(String fileName, String userName) {
+        for (Map.Entry<String, User> entry : users.entrySet()) {
+            if (!entry.getKey().equals(userName) && entry.getValue().getFiles().containsKey(fileName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

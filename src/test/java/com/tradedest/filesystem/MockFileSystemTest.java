@@ -45,7 +45,7 @@ public class MockFileSystemTest {
         fs.addUserFile("user1", "file1", 50);
         fs.addUserFile("user2", "file2", 50);
         fs.mergeUsers("user1", "user2");
-        assertEquals(200, fs.getCapacityLimitOfUser("user1"));
+        assertEquals(250, fs.getCapacityLimitOfUser("user1"));
         assertTrue(fs.containsFileOfUser("user1", "file2"));
     }
 

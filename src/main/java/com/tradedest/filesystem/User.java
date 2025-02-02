@@ -20,6 +20,14 @@ public class User {
         return capacity - usedSpace;
     }
 
+    public void addCapacity(long capacity) {
+        this.capacity += capacity;
+    }
+
+    public long getCapacity() {
+        return capacity;
+    }
+
     public void addFile(String fileName, long fileSize) {
         if (getLeftSpace() >= fileSize) {
             files.put(fileName, fileSize);
@@ -27,6 +35,31 @@ public class User {
         } else {
             throw new IllegalArgumentException("Not enough space");
         }
+    }
+
+    public void addFiles(Map<String, Long> files) {
+        if (canAddFiles(files)) {
+            files.forEach((fileName, fileSize) -> {
+                this.files.put(fileName, fileSize);
+                usedSpace += fileSize;
+            });
+        } else {
+            throw new IllegalArgumentException("Not enough space");
+        }
+    }
+
+    public Map<String, Long> getFiles() {
+        return files;
+    }
+
+    public boolean canAddFiles(Map<String, Long> files) {
+        long totalSize = files.values().stream().mapToLong(Long::longValue).sum();
+        return getLeftSpace() >= totalSize;
+    }
+
+    public void deleteAllFiles() {
+        files.clear();
+        usedSpace = 0;
     }
 
     public void deleteFile(String fileName) {
