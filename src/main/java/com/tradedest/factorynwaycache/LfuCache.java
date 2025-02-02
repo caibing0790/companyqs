@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class LfuCache<K, V> implements Cache<K, V> {
-    private int cacheSize;
+    private final int cacheSize;
     private final ConcurrentHashMap<K, V> cache;
     private final ConcurrentHashMap<K, Integer> frequency;
     private final ConcurrentHashMap<Integer, LinkedHashSet<K>> freqMap;
